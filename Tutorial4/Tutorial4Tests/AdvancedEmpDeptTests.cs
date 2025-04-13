@@ -21,8 +21,7 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-        decimal? minSalary = emps
-        .Where(e => e.DeptNo == 30)
+        decimal? minSalary = emps.Where(e => e.DeptNo == 30)
         .Min(e => e.Sal);
 
         Assert.Equal(1250, minSalary);
@@ -35,8 +34,7 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-        var firstTwo = emps
-        .OrderBy(emp => emp.HireDate)
+        var firstTwo = emps.OrderBy(emp => emp.HireDate)
         .Take(2)
         .ToList(); 
         
@@ -51,10 +49,8 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-        var jobs = emps
-        .Select(emp => emp.Job)
-        .Distinct()
-        .ToList();
+        var jobs = emps.Select(emp => emp.Job)
+        .Distinct();
         
         Assert.Contains("PRESIDENT", jobs);
         Assert.Contains("SALESMAN", jobs);
@@ -67,8 +63,7 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-        var withMgr = emps
-        .Where(emp => emp.Mgr != null)
+        var withMgr = emps.Where(emp => emp.Mgr != null)
         .ToList();
         
         Assert.All(withMgr, e => Assert.NotNull(e.Mgr));
@@ -93,7 +88,7 @@ public class AdvancedEmpDeptTests
     {
         var emps = Database.GetEmps();
 
-         var result = emps.Any(emp => emp.Comm.HasValue && emp.Comm > 400);
+        var result = emps.Any(emp => emp.Comm.HasValue && emp.Comm > 400);
         
         Assert.True(result);
     }
@@ -106,15 +101,7 @@ public class AdvancedEmpDeptTests
         var emps = Database.GetEmps();
 
         var result = emps
-        .Join(
-            emps,
-            emp => emp.Mgr,
-            mgr => mgr.EmpNo,
-            (emp, mgr) => new
-            {
-                Employee = emp.EName,
-                Manager = mgr.EName
-            })
+        .Join(emps, emp => emp.Mgr, mgr => mgr.EmpNo, (emp, mgr) => new { Employee = emp.EName, Manager = mgr.EName})
         .ToList();
         
         Assert.Contains(result, r => r.Employee == "SMITH" && r.Manager == "FORD");
@@ -128,11 +115,7 @@ public class AdvancedEmpDeptTests
         var emps = Database.GetEmps();
 
         var result = emps
-        .Select(emp => new
-        {
-            EName = emp.EName,
-            Total = emp.Sal + (emp.Comm ?? 0)
-        })
+        .Select(emp => new {EName = emp.EName, Total = emp.Sal + (emp.Comm ?? 0)})
         .ToList();
         
         Assert.Contains(result, r => r.EName == "ALLEN" && r.Total == 1900);
